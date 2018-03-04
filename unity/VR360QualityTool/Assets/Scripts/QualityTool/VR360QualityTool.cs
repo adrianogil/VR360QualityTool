@@ -10,6 +10,7 @@ using UnityEditor;
 
 public class VR360QualityTool : MonoBehaviour {
 
+    public float fieldOfView = 100;
 
     public int screenshotWidth, screenshotHeight;
     public List<Vector3> screenshotDirections;
@@ -28,13 +29,14 @@ public class VR360QualityTool : MonoBehaviour {
     #if UNITY_EDITOR
     public void GenerateScreenshots()
     {
-        if (screenshotDirections == null) return;
+        if (screenshotDirections == null || screenshotWidth <= 0 || screenshotHeight <= 0) return;
 
         GameObject cameraObject = new GameObject("Camera");
         cameraObject.transform.parent = transform;
         cameraObject.transform.localPosition = Vector3.zero;
 
         Camera cameraComponent = cameraObject.AddComponent<Camera>();
+        cameraComponent.fieldOfView = fieldOfView;
 
         int index = 0;
 
