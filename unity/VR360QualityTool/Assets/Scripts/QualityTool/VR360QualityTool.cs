@@ -8,12 +8,26 @@ using System.IO;
 using UnityEditor;
 #endif
 
+public enum QualityMetric
+{
+    MSE,
+    SSIM
+}
+
 public class VR360QualityTool : MonoBehaviour {
 
+
+    [Header("Screenshot Settings")]
     public float fieldOfView = 100;
 
     public int screenshotWidth, screenshotHeight;
     public List<Vector3> screenshotDirections;
+
+    [Header("360 Format Settings")]
+    public List<Transform> imageFormatObjects;
+
+    [HideInInspector]
+    public List<QualityMetric> metrics;
 
 	// Use this for initialization
 	void Start () {
@@ -85,6 +99,28 @@ public class VR360QualityToolEditor : Editor {
         {
             editorObj.GenerateScreenshots();
         }
+
+        EditorGUILayout.Space();
+
+        EditorGUILayout.LabelField("Metrics", EditorStyles.boldLabel);
+
+        if (editorObj.metrics != null) {
+            for (int m = 0; m < editorObj.metrics.Count; m++)
+            {
+                editorObj.metrics[m] = (QualityMetric)EditorGUILayout.EnumPopup("Quality Metric " + m + ":", 
+                    editorObj.metrics[m]);
+            }
+        }
+
+        EditorGUI.indentLevel--;
+
+        if (GUILayout.Button("Add Metric"))
+        {
+            if (editorObj.metrics == null) {
+                editorObj.metrics = new List<QualityMetric>();
+            }
+            editorObj.metrics.Add(QualityMetric.MSE);
+        }      
     }
 
 }

@@ -55,6 +55,7 @@ public class SphereCubeGeneration : MonoBehaviour {
         MeshProcessing.SubdivideTrianglesIn4(meshBuilder);
         MeshProcessing.SubdivideTrianglesIn4(meshBuilder);
         MeshProcessing.SubdivideTrianglesIn4(meshBuilder);
+        MeshProcessing.SubdivideTrianglesIn4(meshBuilder);
         // MeshProcessing.SubdivideTriangles(meshBuilder);
         // MeshProcessing.SubdivideTriangles(meshBuilder);
         // MeshProcessing.SubdivideTriangles(meshBuilder);
