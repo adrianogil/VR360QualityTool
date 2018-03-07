@@ -67,7 +67,8 @@ public class SphereCubeGeneration : MonoBehaviour {
 
             Vector2 longlat = new Vector2(Mathf.Atan2(v.x, v.z) + Mathf.PI, Mathf.Acos(v.y));
             Vector2 uv = new Vector2(longlat.x / (2f * Mathf.PI), longlat.y / Mathf.PI);
-            uv.y = (-1f) * uv.y;
+            uv.y = 1f - uv.y;
+            uv.x = 1f - uv.x;
 
             meshBuilder.UVs.Add(uv);
         }

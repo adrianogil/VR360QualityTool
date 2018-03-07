@@ -31,15 +31,15 @@ public class VR360QualityTool : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+
 	}
 
-    
+	// Update is called once per frame
+	void Update () {
+
+	}
+
+
     #if UNITY_EDITOR
     public void GenerateScreenshots()
     {
@@ -93,17 +93,32 @@ public class VR360QualityTool : MonoBehaviour {
         }
 
         DestroyImmediate(cameraObject);
+
+        string image1 = "";
+        string image2 = "";
+
+        for (int f = 1; f < imageFormatObjects.Count; f++)
+        {
+            for (int d = 0; d < screenshotDirections.Count; d++)
+            {
+                image1 = "Screenshots/Screenshot_" + d + "_" + imageFormatObjects[0].name + ".jpg";
+                image2 = "Screenshots/Screenshot_" + d + "_" + imageFormatObjects[f].name + ".jpg";
+                ExecuteCommand (image1, image2);
+            }
+        }
     }
 
     public void ExecuteCommand (string image1, string image2)
     {
+        Debug.Log("GilLog - VR360QualityTool::ExecuteCommand");
+
         string commandArguments = "../../python/qualityassessment.py " + image1 + " " + image2 + " ";
 
         if (metrics == null) return;
 
         for (int m = 0; m < metrics.Count; m++)
         {
-            commandArguments += metrics.ToString() + " ";
+            commandArguments += metrics[m].ToString() + " ";
         }
 
         Debug.Log("GilLog - VR360QualityTool::ExecuteCommand - commandArguments " + commandArguments + " ");
@@ -132,29 +147,24 @@ public class VR360QualityToolEditor : Editor {
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
-    
+
         VR360QualityTool editorObj = target as VR360QualityTool;
-    
+
         if (editorObj == null) return;
 
-        if (GUILayout.Button("Generate screenshots"))
-        {
-            editorObj.GenerateScreenshots();
-        }
-
         EditorGUILayout.Space();
+
+        EditorGUI.indentLevel++;
 
         EditorGUILayout.LabelField("Metrics", EditorStyles.boldLabel);
 
         if (editorObj.metrics != null) {
             for (int m = 0; m < editorObj.metrics.Count; m++)
             {
-                editorObj.metrics[m] = (QualityMetric)EditorGUILayout.EnumPopup("Quality Metric " + m + ":", 
+                editorObj.metrics[m] = (QualityMetric)EditorGUILayout.EnumPopup("Quality Metric " + m + ":",
                     editorObj.metrics[m]);
             }
         }
-
-        EditorGUI.indentLevel--;
 
         if (GUILayout.Button("Add Metric"))
         {
@@ -162,7 +172,14 @@ public class VR360QualityToolEditor : Editor {
                 editorObj.metrics = new List<QualityMetric>();
             }
             editorObj.metrics.Add(QualityMetric.MSE);
-        }      
+        }
+
+        EditorGUI.indentLevel--;
+
+        if (GUILayout.Button("Generate screenshots"))
+        {
+            editorObj.GenerateScreenshots();
+        }
     }
 
 }
