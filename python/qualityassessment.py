@@ -43,6 +43,8 @@ def compare_images(imageA, imageB, title, metrics):
         # compute the structural similarity index
         metrics_data = metrics_data + (ssim(imageA, imageB),)
 
+    print(metrics_str)
+
     plt.suptitle(metrics_str % metrics_data)
 
     # show first image
@@ -58,7 +60,7 @@ def compare_images(imageA, imageB, title, metrics):
     # show the images
     plt.show()
 
-def process_images(imageA_path, imageB_path, metrics):
+def process_images(imageA_path, imageB_path, is_show_graph, is_build_report, metrics):
     original = cv2.imread(imageA_path)
     original_degraded = cv2.imread(imageB_path)
 
@@ -76,10 +78,13 @@ if __name__ == '__main__':
         # and the original + photoshop
         process_images("images/ballons.jpg", "images/ballons_degraded.jpg", ["MSE", "SSIM"])
 
-    elif len(sys.argv) > 3:
+    elif len(sys.argv) > 5:
         metrics = []
 
-        for m in xrange(3, len(sys.argv)):
-            metrics.append(m)
+        for m in xrange(5, len(sys.argv)):
+            metrics.append(sys.argv[m])
 
-        process_images(sys.argv[1], sys.argv[2], metrics)
+        is_show_graph = (sys.argv[3] == '--graph')
+        is_build_report = (sys.argv[4] == '--report')
+
+        process_images(sys.argv[1], sys.argv[2], is_show_graph, is_build_report, metrics)

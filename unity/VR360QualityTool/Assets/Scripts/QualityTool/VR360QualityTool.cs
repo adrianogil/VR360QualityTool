@@ -29,6 +29,12 @@ public class VR360QualityTool : MonoBehaviour {
     [HideInInspector]
     public List<QualityMetric> metrics;
 
+    [HideInInspector]
+    public bool showPlots;
+
+    [HideInInspector]
+    public bool generateReport;
+
 	// Use this for initialization
 	void Start () {
 
