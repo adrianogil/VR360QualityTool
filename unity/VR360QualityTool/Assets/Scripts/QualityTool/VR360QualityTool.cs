@@ -54,32 +54,74 @@ public class VR360QualityTool : MonoBehaviour {
 
         int index = 0;
 
-        for (int d = 0; d < screenshotDirections.Count; d++)
+        if (imageFormatObjects == null || imageFormatObjects.Count < 2) return;
+
+        for (int f = 0; f < imageFormatObjects.Count; f++)
         {
-            Vector3 direction = screenshotDirections[d].normalized;
+            Transform currentFormatObj = imageFormatObjects[f];
 
-            cameraObject.transform.forward = direction;
+            Vector3 originalPosition = currentFormatObj.position;
+            currentFormatObj.position = transform.position;
 
-            RenderTexture rt = new RenderTexture(screenshotWidth, screenshotHeight, 24);
-            cameraComponent.targetTexture = rt; //Create new renderTexture and assign to camera
-            Texture2D screenShot = new Texture2D(screenshotWidth, screenshotWidth, TextureFormat.RGB24, false); //Create new texture
+            index = 0;
 
-            cameraComponent.Render();
+            for (int d = 0; d < screenshotDirections.Count; d++)
+            {
+                Vector3 direction = screenshotDirections[d].normalized;
 
-            RenderTexture.active = rt;
-            screenShot.ReadPixels(new Rect(0, 0, screenshotWidth, screenshotHeight), 0, 0); //Apply pixels from camera onto Texture2D
-            byte[] textureBytes = screenShot.EncodeToJPG();
-            File.WriteAllBytes("Screenshot_" + index + ".jpg", textureBytes);
+                cameraObject.transform.forward = direction;
 
-            cameraComponent.targetTexture = null;
-            RenderTexture.active = null; //Clean
-            DestroyImmediate(rt); //Free memory
+                RenderTexture rt = new RenderTexture(screenshotWidth, screenshotHeight, 24);
+                cameraComponent.targetTexture = rt; //Create new renderTexture and assign to camera
+                Texture2D screenShot = new Texture2D(screenshotWidth, screenshotWidth, TextureFormat.RGB24, false); //Create new texture
 
-            index++;
+                cameraComponent.Render();
+
+                RenderTexture.active = rt;
+                screenShot.ReadPixels(new Rect(0, 0, screenshotWidth, screenshotHeight), 0, 0); //Apply pixels from camera onto Texture2D
+                byte[] textureBytes = screenShot.EncodeToJPG();
+                File.WriteAllBytes("Screenshots/Screenshot_" + index + "_" + currentFormatObj.name  + ".jpg", textureBytes);
+
+                cameraComponent.targetTexture = null;
+                RenderTexture.active = null; //Clean
+                DestroyImmediate(rt); //Free memory
+
+                index++;
+            }
+
+            currentFormatObj.position = originalPosition;
         }
 
         DestroyImmediate(cameraObject);
     }
+
+    public void ExecuteCommand (string image1, string image2)
+    {
+        string commandArguments = "../../python/qualityassessment.py " + image1 + " " + image2 + " ";
+
+        if (metrics == null) return;
+
+        for (int m = 0; m < metrics.Count; m++)
+        {
+            commandArguments += metrics.ToString() + " ";
+        }
+
+        Debug.Log("GilLog - VR360QualityTool::ExecuteCommand - commandArguments " + commandArguments + " ");
+
+        var processInfo = new System.Diagnostics.ProcessStartInfo("python", commandArguments);
+        processInfo.CreateNoWindow = true;
+        processInfo.UseShellExecute = false;
+
+        var process = System.Diagnostics.Process.Start(processInfo);
+
+        process.WaitForExit();
+        process.Close();
+
+         // var thread = new Thread(delegate () {Command(inputVideo);});
+         // thread.Start();
+     }
+
+
     #endif
 }
 
