@@ -122,6 +122,20 @@ public class VR360QualityTool : MonoBehaviour {
 
         if (metrics == null) return;
 
+        if (showPlots)
+        {
+            commandArguments += "--graph ";
+        } else {
+            commandArguments += "--no-graph ";
+        }
+
+        if (generateReport)
+        {
+            commandArguments += "--report ";
+        } else {
+            commandArguments += "--no-report ";
+        }
+
         for (int m = 0; m < metrics.Count; m++)
         {
             commandArguments += metrics[m].ToString() + " ";

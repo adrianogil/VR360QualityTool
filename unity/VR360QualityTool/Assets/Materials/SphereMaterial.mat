@@ -74,6 +74,6 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _FinalPosition: {r: 1, g: 0.1, b: 1, a: 1}
+    - _FinalPosition: {r: 0, g: 0, b: 1, a: 1}
     - _InitialPosition: {r: 0, g: 0, b: 0, a: 0}
     - _TintColor: {r: 0.89705884, g: 0.21766868, b: 0.25983772, a: 1}
