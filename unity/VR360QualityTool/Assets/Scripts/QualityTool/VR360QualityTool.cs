@@ -194,6 +194,9 @@ public class VR360QualityToolEditor : Editor {
             editorObj.metrics.Add(QualityMetric.MSE);
         }
 
+        editorObj.showPlots = EditorGUILayout.Toggle("Generate Graphs: ", editorObj.showPlots);
+        editorObj.generateReport = EditorGUILayout.Toggle("Generate Report: ", editorObj.generateReport);
+
         EditorGUI.indentLevel--;
 
         if (GUILayout.Button("Generate screenshots"))
