@@ -11,7 +11,9 @@ using UnityEditor;
 public enum QualityMetric
 {
     MSE,
-    SSIM
+    SSIM,
+    PSNR,
+    WSPSNR
 }
 
 public class VR360QualityTool : MonoBehaviour {

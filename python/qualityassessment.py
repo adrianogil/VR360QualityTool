@@ -17,6 +17,13 @@ def mse(imageA, imageB):
     # the two images are
     return err
 
+def psnr(imageA, imageB):
+    mse_value = mse(imageA, imageB)
+    if mse_value == 0:
+        return 100
+    PIXEL_MAX = 255.0
+    return 20 * np.log10(PIXEL_MAX / np.sqrt(mse_value))
+
 def compare_images(imageA, imageB, results_path, title, metrics):
     # compute the mean squared error and structural similarity
     # index for the images
@@ -44,6 +51,22 @@ def compare_images(imageA, imageB, results_path, title, metrics):
             metrics_str = metrics_str + ", SSIM: %.2f"
         # compute the structural similarity index
         metrics_data = metrics_data + (ssim(imageA, imageB),)
+
+    if "PSNR" in metrics:
+        if metrics_str == "":
+            metrics_str = "PSNR: %.2f"
+        else:
+            metrics_str = metrics_str + ", PSNR: %.2f"
+        # compute the PSNR
+        metrics_data = metrics_data + (psnr(imageA, imageB),)
+
+    if "WSPSNR" in metrics:
+        if metrics_str == "":
+            metrics_str = "WS-PSNR: %.2f"
+        else:
+            metrics_str = metrics_str + ", WS-PSNR: %.2f"
+        # compute the WS-PSNR
+        metrics_data = metrics_data + (psnr(imageA, imageB),)
 
     print(metrics_str)
 
