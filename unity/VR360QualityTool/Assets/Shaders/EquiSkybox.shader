@@ -1,4 +1,5 @@
 // Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+// https://gist.github.com/neon-izm/53c881456c1414cf07ad
 
 Shader "Skybox/Equirectangular" {
     Properties{
@@ -57,6 +58,7 @@ Shader "Skybox/Equirectangular" {
         float3 dir = normalize(i.texcoord);
         float2 longlat = float2(atan2(dir.x, dir.z) + UNITY_PI, acos(-dir.y));
         float2 uv = longlat / float2(2.0 * UNITY_PI, UNITY_PI);
+        uv.x = 1.0 - uv.x;
         half4 tex = tex2D(_Tex, uv);
         half3 c = DecodeHDR(tex, _Tex_HDR);
         c = c * _Tint.rgb * unity_ColorSpaceDouble.rgb;
