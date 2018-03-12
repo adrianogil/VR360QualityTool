@@ -17,11 +17,13 @@ def mse(imageA, imageB):
     # the two images are
     return err
 
-def compare_images(imageA, imageB, title, metrics):
+def compare_images(imageA, imageB, results_path, title, metrics):
     # compute the mean squared error and structural similarity
     # index for the images
 
     # setup the figure
+    # ax.plot([0,1,2], [10,20,3])
+    title = ""
     fig = plt.figure(title)
 
     metrics_str = ""
@@ -58,9 +60,10 @@ def compare_images(imageA, imageB, title, metrics):
     plt.axis("off")
 
     # show the images
-    plt.show()
+    fig.savefig(results_path)   # save the figure to file
+    # plt.show()
 
-def process_images(imageA_path, imageB_path, is_show_graph, is_build_report, metrics):
+def process_images(imageA_path, imageB_path, results_path, is_show_graph, is_build_report, metrics):
     original = cv2.imread(imageA_path)
     original_degraded = cv2.imread(imageB_path)
 
@@ -68,7 +71,7 @@ def process_images(imageA_path, imageB_path, is_show_graph, is_build_report, met
     original = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
     original_degraded = cv2.cvtColor(original_degraded, cv2.COLOR_BGR2GRAY)
 
-    compare_images(original, original_degraded, 'Images', metrics)
+    compare_images(original, original_degraded, results_path, 'Images', metrics)
 
 if __name__ == '__main__':
     import sys
@@ -76,15 +79,15 @@ if __name__ == '__main__':
     if len(sys.argv) == 1:
         # load the images -- the original, the original + contrast,
         # and the original + photoshop
-        process_images("images/ballons.jpg", "images/ballons_degraded.jpg", ["MSE", "SSIM"])
+        process_images("images/ballons.jpg", "images/ballons_degraded.jpg", '../Results/comparison.png' ["MSE", "SSIM"])
 
-    elif len(sys.argv) > 5:
+    elif len(sys.argv) > 6:
         metrics = []
 
-        for m in xrange(5, len(sys.argv)):
+        for m in xrange(6, len(sys.argv)):
             metrics.append(sys.argv[m])
 
-        is_show_graph = (sys.argv[3] == '--graph')
-        is_build_report = (sys.argv[4] == '--report')
+        is_show_graph = (sys.argv[4] == '--graph')
+        is_build_report = (sys.argv[5] == '--report')
 
-        process_images(sys.argv[1], sys.argv[2], is_show_graph, is_build_report, metrics)
+        process_images(sys.argv[1], sys.argv[2], sys.argv[3], is_show_graph, is_build_report, metrics)

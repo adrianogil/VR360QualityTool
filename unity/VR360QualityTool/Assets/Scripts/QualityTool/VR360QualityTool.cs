@@ -69,6 +69,8 @@ public class VR360QualityTool : MonoBehaviour {
             Vector3 originalPosition = currentFormatObj.position;
             currentFormatObj.position = transform.position;
 
+            currentFormatObj.gameObject.SetActive(true);
+
             index = 0;
 
             for (int d = 0; d < screenshotDirections.Count; d++)
@@ -95,6 +97,7 @@ public class VR360QualityTool : MonoBehaviour {
                 index++;
             }
 
+            currentFormatObj.gameObject.SetActive(false);
             currentFormatObj.position = originalPosition;
         }
 
@@ -102,6 +105,7 @@ public class VR360QualityTool : MonoBehaviour {
 
         string image1 = "";
         string image2 = "";
+        string resultPath = "";
 
         for (int f = 1; f < imageFormatObjects.Count; f++)
         {
@@ -109,16 +113,18 @@ public class VR360QualityTool : MonoBehaviour {
             {
                 image1 = "Screenshots/Screenshot_" + d + "_" + imageFormatObjects[0].name + ".jpg";
                 image2 = "Screenshots/Screenshot_" + d + "_" + imageFormatObjects[f].name + ".jpg";
-                ExecuteCommand (image1, image2);
+                resultPath = "../../Results/Result_direction_" + d +  "_" + imageFormatObjects[0].name +
+                        "_" + imageFormatObjects[f].name + ".jpg";
+                ExecuteCommand (image1, image2, resultPath);
             }
         }
     }
 
-    public void ExecuteCommand (string image1, string image2)
+    public void ExecuteCommand (string image1, string image2, string resultPath)
     {
         Debug.Log("GilLog - VR360QualityTool::ExecuteCommand");
 
-        string commandArguments = "../../python/qualityassessment.py " + image1 + " " + image2 + " ";
+        string commandArguments = "../../python/qualityassessment.py " + image1 + " " + image2 + " " + resultPath + " ";
 
         if (metrics == null) return;
 
