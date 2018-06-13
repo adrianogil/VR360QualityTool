@@ -23,6 +23,11 @@ public class MeshBuilder {
 		return m_Indices.ToArray();
 	}
 
+	public void ReplaceTriangleIndex(int tindex, int indexValue)
+	{
+		m_Indices[tindex] = indexValue;
+	}
+
 	public void ClearTriangles()
 	{
 		m_Indices.Clear();

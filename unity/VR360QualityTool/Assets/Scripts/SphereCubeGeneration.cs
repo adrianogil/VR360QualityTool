@@ -73,10 +73,74 @@ public class SphereCubeGeneration : MonoBehaviour {
             meshBuilder.UVs.Add(uv);
         }
 
+        int[] triangles = meshBuilder.GetTriangles();
+
+        int v1, v2, v3, t1, t2, t3;
+
+        float uv1, uv2, uv3;
+
+        for (int i = 0; i < triangles.Length/3; i++)
+        {
+            t1 = 3*i;
+            t2 = 3*i+1;
+            t3 = 3*i+2;
+
+            v1 = triangles[t1];
+            v2 = triangles[t2];
+            v3 = triangles[t3];
+
+            uv1 = meshBuilder.UVs[v1].x;
+            uv2 = meshBuilder.UVs[v2].x;
+            uv3 = meshBuilder.UVs[v3].x;
+
+            if (!VerifyWrongTriangleUV(uv1, uv2, uv3, v2, v3, t2, t3, meshBuilder))
+            {
+                if (!VerifyWrongTriangleUV(uv2, uv1, uv3, v1, v3, t1, t3, meshBuilder))
+                {
+                    VerifyWrongTriangleUV(uv3, uv2, uv1, v2, v1, t2, t1, meshBuilder);
+                }    
+            }
+
+        }
 
         Mesh mesh = meshBuilder.CreateMesh();
         mesh.RecalculateBounds();
         filter.mesh = mesh;
+    }
+
+    bool VerifyWrongTriangleUV(float uv1, float uv2, float uv3,
+            int v2, int v3, int t2, int t3, MeshBuilder meshBuilder)
+    {
+        bool fixedUV = false;
+
+        if (uv1 > 0.8 && (uv2 < 0.2 || uv3 < 0.2))
+        {
+            if (uv2 < 0.2)
+            {
+                FixTriangleUV(meshBuilder, v2, t2);
+                fixedUV = true;
+            }
+            if (uv3 < 0.2)
+            {
+                FixTriangleUV(meshBuilder, v3, t3);
+                fixedUV = true;
+            }
+        }
+
+        return fixedUV;
+    }
+
+    void FixTriangleUV(MeshBuilder meshBuilder, int v, int t)
+    {
+        int vIndex = meshBuilder.Vertices.Count;
+        meshBuilder.Vertices.Add(meshBuilder.Vertices[v]);
+
+        Vector2 newUv = meshBuilder.UVs[v];
+        newUv.x += 1.0f;
+
+        meshBuilder.UVs.Add(newUv);
+
+        meshBuilder.ReplaceTriangleIndex(t, vIndex);
     }
 }
 
