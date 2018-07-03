@@ -78,7 +78,6 @@ public class SphereCubeGeneration : MonoBehaviour {
         int v1, v2, v3, t1, t2, t3;
 
         float uv1, uv2, uv3;
-
         for (int i = 0; i < triangles.Length/3; i++)
         {
             t1 = 3*i;

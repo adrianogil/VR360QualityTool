@@ -83,7 +83,7 @@ public class VR360QualityTool : MonoBehaviour {
 
                 RenderTexture rt = new RenderTexture(screenshotWidth, screenshotHeight, 24);
                 cameraComponent.targetTexture = rt; //Create new renderTexture and assign to camera
-                Texture2D screenShot = new Texture2D(screenshotWidth, screenshotWidth, TextureFormat.RGB24, false); //Create new texture
+                Texture2D screenShot = new Texture2D(screenshotWidth, screenshotHeight, TextureFormat.RGB24, false); //Create new texture
 
                 cameraComponent.Render();
 
