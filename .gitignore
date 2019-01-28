@@ -1,5 +1,11 @@
 .DS_Store
 
+Results/
+unity/ExportedUnity/
+unity/VR360QualityTool/Library/
+unity/VR360QualityTool/Screenshots/
+unity/VR360QualityTool/UnityPackageManager/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
