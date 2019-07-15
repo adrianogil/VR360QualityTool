@@ -1,7 +1,11 @@
 #!/usr/bin/python
 
-from skimage.measure import structural_similarity as ssim
+from skimage.measure import compare_ssim as ssim
+
+import matplotlib
+matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
+
 import numpy as np
 import cv2
 
@@ -24,7 +28,7 @@ def psnr(imageA, imageB):
     PIXEL_MAX = 255.0
     return 20 * np.log10(PIXEL_MAX / np.sqrt(mse_value))
 
-def compare_images(imageA, imageB, results_path, title, metrics):
+def compare_images(imageA, imageB, results_path, title, chart_path, metrics):
     # compute the mean squared error and structural similarity
     # index for the images
 
@@ -68,7 +72,8 @@ def compare_images(imageA, imageB, results_path, title, metrics):
         # compute the WS-PSNR
         metrics_data = metrics_data + (psnr(imageA, imageB),)
 
-    print(metrics_str)
+    print(metrics_str % metrics_data)
+    print()
 
     plt.suptitle(metrics_str % metrics_data)
 
@@ -83,10 +88,14 @@ def compare_images(imageA, imageB, results_path, title, metrics):
     plt.axis("off")
 
     # show the images
-    fig.savefig(results_path)   # save the figure to file
+    fig.savefig(chart_path)   # save the figure to file
     # plt.show()
 
-def process_images(imageA_path, imageB_path, results_path, is_show_graph, is_build_report, metrics):
+def process_images(imageA_path, imageB_path, results_path, is_show_graph, is_build_report, chart_path, metrics):
+
+    print("Reference image: %s" % (imageA_path,))
+    print("Target image: %s" % (imageB_path,))
+
     original = cv2.imread(imageA_path)
     original_degraded = cv2.imread(imageB_path)
 
@@ -94,7 +103,7 @@ def process_images(imageA_path, imageB_path, results_path, is_show_graph, is_bui
     original = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
     original_degraded = cv2.cvtColor(original_degraded, cv2.COLOR_BGR2GRAY)
 
-    compare_images(original, original_degraded, results_path, 'Images', metrics)
+    compare_images(original, original_degraded, results_path, 'Images', chart_path, metrics)
 
 if __name__ == '__main__':
     import sys
@@ -102,15 +111,17 @@ if __name__ == '__main__':
     if len(sys.argv) == 1:
         # load the images -- the original, the original + contrast,
         # and the original + photoshop
-        process_images("images/ballons.jpg", "images/ballons_degraded.jpg", '../Results/comparison.png' ["MSE", "SSIM"])
+        process_images("images/ballons.jpg", "images/ballons_degraded.jpg", '../Results/comparison.png', 'chart.png', ["MSE", "SSIM"])
 
-    elif len(sys.argv) > 6:
+    elif len(sys.argv) > 7:
         metrics = []
 
-        for m in xrange(6, len(sys.argv)):
+        for m in range(6, len(sys.argv)):
             metrics.append(sys.argv[m])
 
         is_show_graph = (sys.argv[4] == '--graph')
         is_build_report = (sys.argv[5] == '--report')
 
-        process_images(sys.argv[1], sys.argv[2], sys.argv[3], is_show_graph, is_build_report, metrics)
+        chart_path = sys.argv[6]
+
+        process_images(sys.argv[1], sys.argv[2], sys.argv[3], is_show_graph, is_build_report, chart_path, metrics)
